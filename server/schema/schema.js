@@ -13,7 +13,7 @@ let books = [
     {name: 'My little butt', genre: 'Sci-Fi', id: '6', authorId: '3'},
 ]
 
-const authors =  [
+let authors =  [
     {name: 'Patrick Rothfuss', age: 44, id:"1"},
     {name: 'Brandon Sanderson', age: 42, id:"2"},
     {name: 'Terry Pratchett', age: 66, id:"3"},
@@ -92,9 +92,28 @@ const RootQuery = new GraphQLObjectType({
     }
 })
 
-
+const Mutation = new GraphQLObjectType({
+    name: 'Mutation',
+    fields: {
+        // add author to database
+        addAuthor: {
+            type: AuthorType,
+            args: {
+                name: {type: GraphQLString},
+                age: {type: GraphQLInt},
+            },
+            resolve(parent, args) {
+                const { name, age } = args;
+                const author = { id: Math.floor(Math.random()*100), name, age }
+                authors = [ ... authors, author ]
+                return author;
+            }
+        }
+    }
+})
 
 // 사용 가능한 Query들을 export해주자
 module.exports = new GraphQLSchema({
-    query: RootQuery
+    query: RootQuery,
+    mutation: Mutation
 })
