@@ -1,13 +1,16 @@
 const graphql = require('graphql');
 const _ = require('lodash');
 
-const { GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLInt, GraphQLID } = graphql;
+const { GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLInt, GraphQLID, GraphQLList} = graphql;
 
 // Dummy Data
 let books = [
-    {name: 'Name of the Wind', genre: 'Fantasy', id: '1'},
-    {name: 'The Final Empire', genre: 'Fantasy', id: '2'},
-    {name: 'The Long Earth', genre: 'Sci-Fi', id: '3'},
+    {name: 'Name of the Wind', genre: 'Fantasy', id: '1', authorId: '1'},
+    {name: 'The Final Empire', genre: 'Fantasy', id: '2', authorId: '2'},
+    {name: 'The Long Earth', genre: 'Sci-Fi', id: '3', authorId: '3'},
+    {name: 'Harry Potter', genre: 'Fantasy', id: '4', authorId: '2'},
+    {name: 'I pooped on your face', genre: 'Fantasy', id: '5', authorId: '3'},
+    {name: 'My little butt', genre: 'Sci-Fi', id: '6', authorId: '3'},
 ]
 
 const authors =  [
@@ -23,7 +26,16 @@ const BookType = new GraphQLObjectType({
     fields: () => ({ // Object를 리턴하는 함수이다
        id: {type: GraphQLID},
        name: {type: GraphQLString},
-       genre: {type: GraphQLString}
+       genre: {type: GraphQLString},
+       author: {
+           type: AuthorType,
+           // 여기서 parent는 book을 의미한다
+           // 만약 book id가 2였다면 parent는 다음과 같다:
+           // { name: 'The Final Empire', genre: 'Fantasy', id: '2', authorId: '2' }
+           resolve(parent, args) {
+               return _.find(authors, {id: parent.authorId})
+           }
+       }
     })
 })
 
@@ -33,8 +45,13 @@ const AuthorType = new GraphQLObjectType({
     fields: () => ({
         id: {type: GraphQLID},
         name: {type: GraphQLString},
-        age: {type: GraphQLInt}
-
+        age: {type: GraphQLInt},
+        books: {
+            type: new GraphQLList(BookType),
+            resolve(parent, args) {
+                return _.filter(books, {authorId: parent.id})
+            }
+        }
     })
 })
 
@@ -58,6 +75,18 @@ const RootQuery = new GraphQLObjectType({
             args: { id: { type: GraphQLID }},
             resolve(parent, args) {
                 return _.find(authors, {id: args.id});
+            }
+        },
+        books: {
+            type: new GraphQLList(BookType),
+            resolve(parent, args) {
+                return books;
+            }
+        },
+        authors: {
+            type: new GraphQLList(AuthorType),
+            resolve(parent, args) {
+                return authors;
             }
         }
     }
