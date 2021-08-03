@@ -105,7 +105,21 @@ const Mutation = new GraphQLObjectType({
             resolve(parent, args) {
                 const { name, age } = args;
                 const author = { id: Math.floor(Math.random()*100), name, age }
-                authors = [ ... authors, author ]
+                authors = [ ... authors, author ];
+                return author;
+            }
+        },
+        addBook: {
+            type: BookType,
+            args: {
+                name: {type: GraphQLString},
+                genre: {type: GraphQLString},
+                authorId: {type: GraphQLID}
+            },
+            resolve(parent, args) {
+                const { name, genre, authorId } = args;
+                const book = { id: Math.floor(Math.random()*100), name, genre, authorId }
+                books = [ ... books, book ];
                 return author;
             }
         }
