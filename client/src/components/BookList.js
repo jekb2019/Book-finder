@@ -1,15 +1,7 @@
 import React from 'react';
-import {useQuery, gql} from "@apollo/client";
+import { useQuery } from "@apollo/client";
+import { getBooks } from '../queries/queries';
 
-// GraphQL Query 만들기
-const getBooks = gql`
-    {
-        books {
-            name
-            id
-        }
-    }
-`
 // useQuery를 이용해서 Query와 Component를 binding해주기
 // 컴포넌트에서 Query에 결과값에 접근할 수 있도록
 const BookList = (props) => {

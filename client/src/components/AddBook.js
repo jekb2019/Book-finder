@@ -1,15 +1,6 @@
 import React from 'react'
-import {useQuery, gql} from "@apollo/client";
-
-// GraphQL Query 만들기
-const getAuthors = gql`
-    {
-        authors {
-            name
-            id
-        }
-    }
-`
+import { useQuery } from "@apollo/client";
+import { getAuthors } from '../queries/queries';
 
 function AddBook() {
     const {loading, error, data} = useQuery(getAuthors);
