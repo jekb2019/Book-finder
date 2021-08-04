@@ -1,8 +1,12 @@
 const express = require('express');
 const { graphqlHTTP } = require('express-graphql');
 const schema = require('./schema/schema');
+const cors = require('cors');
 
 const app = express();
+
+// allow cross-origin requests
+app.use(cors());
 
 // graphql의 endpoint
 // /graphql로 요청이 올경우 graphqlHTTP가 미들웨어 역할을 한다
