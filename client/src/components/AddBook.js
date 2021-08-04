@@ -23,7 +23,18 @@ function AddBook() {
     const submitForm = (e) => {
         e.preventDefault();
         console.log(name, genre, authorId);;
-        a
+        addBookMutateFunction({
+            variables: {
+                name: name,
+                genre: genre,
+                authorId: authorId
+            },
+            // AddBokk mutaion이 진행된 후 refetch할 query들을 배열형태로 준다
+            // 이렇게 하면 다시 fetch 된 데이터로 BookList의 prop을 업데이트해주므로 BookList 컴포넌트를 다시 렌더링한다.
+            refetchQueries: [{
+                query: getBooks
+            }]
+        })
     }
 
     return (
