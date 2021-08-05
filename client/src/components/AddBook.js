@@ -50,7 +50,7 @@ function AddBook() {
             <div className="field">
                 <label>Author</label>
                 <select onChange={(e) => setAutherId(e.target.value)}>
-                    <option>Select author</option>
+                    <option disabled>Select author</option>
                     {displayAuthors()}
                 </select>
             </div>
